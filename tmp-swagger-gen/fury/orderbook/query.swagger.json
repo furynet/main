@@ -1,0 +1,1078 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fury/orderbook/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/fury/orderbooks/params": {
+      "get": {
+        "summary": "Params queries the parameters of the module.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}": {
+      "get": {
+        "summary": "OrderBook queries orderbook info for given order book id.",
+        "operationId": "OrderBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryOrderBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/exposures": {
+      "get": {
+        "summary": "BookExposures queries exposures info for given orderbook.",
+        "operationId": "BookExposures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryBookExposuresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/exposures/{odds_uid}": {
+      "get": {
+        "summary": "BookExposure queries exposure info for given orderbook and odds id.",
+        "operationId": "BookExposure",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryBookExposureResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "odds_uid",
+            "description": "odds_uid defines the odds id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/historical-participation-exposures": {
+      "get": {
+        "summary": "HistoricalParticipationExposures queries historical exposures info for\ngiven orderbook participation.",
+        "operationId": "HistoricalParticipationExposures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryHistoricalParticipationExposuresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/participation-exposures": {
+      "get": {
+        "summary": "ParticipationExposures queries exposures info for given orderbook\nparticipations.",
+        "operationId": "ParticipationExposures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryParticipationExposuresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/participation-exposures/{participation_index}": {
+      "get": {
+        "summary": "ParticipationExposure queries exposure info for given orderbook\nparticipation.",
+        "operationId": "ParticipationExposure",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryParticipationExposureResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "participation_index",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/participations": {
+      "get": {
+        "summary": "BookParticipations queries participation info for given orderbook.",
+        "operationId": "BookParticipations",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryBookParticipationsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/participations/{participation_index}": {
+      "get": {
+        "summary": "BookParticipation queries participation info for given orderbook and\nparticipation index.",
+        "operationId": "BookParticipation",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryBookParticipationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "participation_index",
+            "description": "participation_index defines the participation index to query for",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{book_uid}/participations/{participation_index}/fulfilled_bets": {
+      "get": {
+        "summary": "ParticipationFulfilledBets queries fulfilled bets for given orderbook\nparticipation.",
+        "operationId": "ParticipationFulfilledBets",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryParticipationFulfilledBetsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "book_uid",
+            "description": "book_uid defines the book id to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "participation_index",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/orderbooks/{status}": {
+      "get": {
+        "summary": "OrderBooks queries all order books that match the given status.",
+        "operationId": "OrderBooks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.orderbook.QueryOrderBooksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "status",
+            "description": "status enables to query for order bookds matching a given status.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cosmos.base.query.v1beta1.PageRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte",
+          "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set."
+        },
+        "offset": {
+          "type": "string",
+          "format": "uint64",
+          "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set."
+        },
+        "limit": {
+          "type": "string",
+          "format": "uint64",
+          "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app."
+        },
+        "count_total": {
+          "type": "boolean",
+          "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set."
+        },
+        "reverse": {
+          "type": "boolean",
+          "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43"
+        }
+      },
+      "description": "message SomeRequest {\n         Foo some_parameter = 1;\n         PageRequest pagination = 2;\n }",
+      "title": "PageRequest is to be embedded in gRPC request messages for efficient\npagination. Ex:"
+    },
+    "cosmos.base.query.v1beta1.PageResponse": {
+      "type": "object",
+      "properties": {
+        "next_key": {
+          "type": "string",
+          "format": "byte",
+          "description": "next_key is the key to be passed to PageRequest.key to\nquery the next page most efficiently. It will be empty if\nthere are no more results."
+        },
+        "total": {
+          "type": "string",
+          "format": "uint64",
+          "title": "total is total number of results available if PageRequest.count_total\nwas set, its value is undefined otherwise"
+        }
+      },
+      "description": "PageResponse is to be embedded in gRPC response messages where the\ncorresponding request message has used PageRequest.\n\n message SomeResponse {\n         repeated Bar results = 1;\n         PageResponse page = 2;\n }"
+    },
+    "furysports.fury.orderbook.BookOddsExposure": {
+      "type": "object",
+      "properties": {
+        "book_uid": {
+          "type": "string",
+          "title": "book_uid is the unique identifier corresponding to the book"
+        },
+        "odds_uid": {
+          "type": "string",
+          "title": "odds_uid is odds uid"
+        },
+        "fulfillment_queue": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          }
+        }
+      },
+      "title": "BookOddsExposure represents the exposures taken on odds"
+    },
+    "furysports.fury.orderbook.BookParticipation": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "string",
+          "format": "uint64",
+          "title": "index is the id of initial participation queue"
+        },
+        "book_uid": {
+          "type": "string",
+          "title": "book_uid is the unique identifier corresponding to the book"
+        },
+        "participant_address": {
+          "type": "string",
+          "description": "participant_address is the bech32-encoded address of the participant."
+        },
+        "is_module_account": {
+          "type": "boolean",
+          "title": "if participation is a module account"
+        },
+        "liquidity": {
+          "type": "string",
+          "title": "liquidity is the total initial liquidity provided"
+        },
+        "current_round_liquidity": {
+          "type": "string",
+          "title": "current round liquidity is the liquidity provided for current round"
+        },
+        "exposures_not_filled": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "total_bet_amount": {
+          "type": "string",
+          "title": "total_bet_amount is the total bet amount corresponding to all exposure"
+        },
+        "current_round_total_bet_amount": {
+          "type": "string",
+          "title": "current_round_total_bet_amount is the total bet amount corresponding to all\nexposure"
+        },
+        "max_loss": {
+          "type": "string",
+          "title": "max_loss is the total bet amount corresponding to all exposure"
+        },
+        "current_round_max_loss": {
+          "type": "string",
+          "title": "current_round_max_loss is the total bet amount corresponding to all\nexposure"
+        },
+        "current_round_max_loss_odds_uid": {
+          "type": "string",
+          "title": "current_round_max_loss_odds_uid is the total bet amount corresponding to\nall exposure"
+        },
+        "actual_profit": {
+          "type": "string",
+          "title": "actual_profit is the actual profit"
+        },
+        "is_settled": {
+          "type": "boolean",
+          "title": "if participation is settled"
+        }
+      },
+      "description": "BookParticipation represents the participants of an order book."
+    },
+    "furysports.fury.orderbook.OrderBook": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "id corresponding to the book"
+        },
+        "participation_count": {
+          "type": "string",
+          "format": "uint64",
+          "title": "participation_count is the count of participations in the order book"
+        },
+        "odds_count": {
+          "type": "string",
+          "format": "uint64",
+          "title": "odds_count is the count of the odds in the order book"
+        },
+        "status": {
+          "$ref": "#/definitions/furysports.fury.orderbook.OrderBookStatus",
+          "title": "order book status"
+        }
+      },
+      "description": "OrderBook represents the order book maintained against a sport event."
+    },
+    "furysports.fury.orderbook.OrderBookStatus": {
+      "type": "string",
+      "enum": [
+        "ORDER_BOOK_STATUS_UNSPECIFIED",
+        "ORDER_BOOK_STATUS_STATUS_ACTIVE",
+        "ORDER_BOOK_STATUS_STATUS_RESOLVED",
+        "ORDER_BOOK_STATUS_STATUS_SETTLED"
+      ],
+      "default": "ORDER_BOOK_STATUS_UNSPECIFIED",
+      "description": "OrderBookStatus is the enum type for the status of the orderbook.\n\n - ORDER_BOOK_STATUS_UNSPECIFIED: invalid\n - ORDER_BOOK_STATUS_STATUS_ACTIVE: active\n - ORDER_BOOK_STATUS_STATUS_RESOLVED: resolved not settled\n - ORDER_BOOK_STATUS_STATUS_SETTLED: resolved and settled"
+    },
+    "furysports.fury.orderbook.Params": {
+      "type": "object",
+      "properties": {
+        "max_book_participations": {
+          "type": "string",
+          "format": "uint64",
+          "description": "max_book_participations is the maximum number of participations per book."
+        },
+        "batch_settlement_count": {
+          "type": "string",
+          "format": "uint64",
+          "description": "batch_settlement_count is the batch settlement deposit counts."
+        }
+      },
+      "description": "Params defines the parameters for the orderbook module."
+    },
+    "furysports.fury.orderbook.ParticipationBetPair": {
+      "type": "object",
+      "properties": {
+        "book_uid": {
+          "type": "string",
+          "title": "book_uid is the unique identifier corresponding to the book"
+        },
+        "participation_index": {
+          "type": "string",
+          "format": "uint64",
+          "title": "participation_index is the count of initial participation queue"
+        },
+        "bet_uid": {
+          "type": "string",
+          "title": "bet_uid is bet's uuid"
+        }
+      },
+      "title": "ParticipationBetPair represents the book participation and bet bond"
+    },
+    "furysports.fury.orderbook.ParticipationExposure": {
+      "type": "object",
+      "properties": {
+        "book_uid": {
+          "type": "string",
+          "title": "book_uid is the unique identifier corresponding to the book"
+        },
+        "odds_uid": {
+          "type": "string",
+          "title": "odds_uid is odd's uid"
+        },
+        "participation_index": {
+          "type": "string",
+          "format": "uint64",
+          "title": "participation_index is the id of initial participation queue"
+        },
+        "exposure": {
+          "type": "string",
+          "title": "exposure is the total exposure taken on given odd"
+        },
+        "bet_amount": {
+          "type": "string",
+          "title": "bet_amount is the total bet amount corresponding to the exposure"
+        },
+        "is_fulfilled": {
+          "type": "boolean"
+        },
+        "round": {
+          "type": "string",
+          "format": "uint64",
+          "title": "number of current round in queue"
+        }
+      },
+      "title": "ParticipationExposure represents the exposures taken on odds by\nparticipations"
+    },
+    "furysports.fury.orderbook.QueryBookExposureResponse": {
+      "type": "object",
+      "properties": {
+        "book_exposure": {
+          "$ref": "#/definitions/furysports.fury.orderbook.BookOddsExposure",
+          "description": "book_exposure defines the the book exposure info."
+        }
+      },
+      "title": "QueryBookExposureResponse is response type for the Query/BookExposure RPC\nmethod"
+    },
+    "furysports.fury.orderbook.QueryBookExposuresResponse": {
+      "type": "object",
+      "properties": {
+        "book_exposures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.BookOddsExposure"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryBookExposuresResponse is response type for the Query/BookExposures RPC\nmethod"
+    },
+    "furysports.fury.orderbook.QueryBookParticipationResponse": {
+      "type": "object",
+      "properties": {
+        "book_participation": {
+          "$ref": "#/definitions/furysports.fury.orderbook.BookParticipation",
+          "description": "book_participation defines the the book participation info."
+        }
+      },
+      "title": "QueryBookParticipationResponse is response type for the\nQuery/BookParticipation RPC method"
+    },
+    "furysports.fury.orderbook.QueryBookParticipationsResponse": {
+      "type": "object",
+      "properties": {
+        "book_participations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.BookParticipation"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryBookParticipationsResponse is response type for the\nQuery/BookParticipations RPC method"
+    },
+    "furysports.fury.orderbook.QueryHistoricalParticipationExposuresResponse": {
+      "type": "object",
+      "properties": {
+        "participation_exposures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.ParticipationExposure"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryHistoricalParticipationExposuresResponse is response type for the\nQuery/HistoricalParticipationExposures RPC method"
+    },
+    "furysports.fury.orderbook.QueryOrderBookResponse": {
+      "type": "object",
+      "properties": {
+        "orderbook": {
+          "$ref": "#/definitions/furysports.fury.orderbook.OrderBook",
+          "description": "orderBook defines the the order book info."
+        }
+      },
+      "title": "QueryOrderBookResponse is response type for the Query/OrderBook RPC method"
+    },
+    "furysports.fury.orderbook.QueryOrderBooksResponse": {
+      "type": "object",
+      "properties": {
+        "orderbooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.OrderBook"
+          },
+          "description": "orderbooks contains all the queried order books."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryOrderBooksResponse is response type for the Query/OrderBooks RPC method"
+    },
+    "furysports.fury.orderbook.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furysports.fury.orderbook.Params",
+          "description": "params holds all the parameters of this module."
+        }
+      },
+      "description": "QueryParamsResponse is the response type for the Query/Params RPC method.\nQuery/Params RPC method."
+    },
+    "furysports.fury.orderbook.QueryParticipationExposureResponse": {
+      "type": "object",
+      "properties": {
+        "participation_exposure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.ParticipationExposure"
+          },
+          "description": "book_exposure defines the the book exposure info."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryParticipationExposureResponse is response type for the\nQuery/ParticipationExposure RPC method"
+    },
+    "furysports.fury.orderbook.QueryParticipationExposuresResponse": {
+      "type": "object",
+      "properties": {
+        "participation_exposures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.ParticipationExposure"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryParticipationExposuresResponse is response type for the\nQuery/ParticipationExposures RPC method"
+    },
+    "furysports.fury.orderbook.QueryParticipationFulfilledBetsResponse": {
+      "type": "object",
+      "properties": {
+        "participation_bets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.orderbook.ParticipationBetPair"
+          },
+          "description": "book_exposure defines the the book exposure info."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryParticipationFulfilledBetsResponse is response type for the\nQuery/ParticipationFulfilledBets RPC method"
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}

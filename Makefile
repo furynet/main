@@ -1,347 +1,254 @@
 #!/usr/bin/make -f
 
-BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+VERSION := $(shell echo $(shell git describe --tags) | sed 's/^v//')
 COMMIT := $(shell git log -1 --format='%H')
-
-# don't override user values
-ifeq (,$(VERSION))
-  VERSION := $(shell git describe --exact-match --tags 2>/dev/null)
-  # if VERSION is empty, then populate it with branch's name and raw commit hash
-  ifeq (,$(VERSION))
-    VERSION := $(BRANCH)-$(COMMIT)
-  endif
-endif
-
-PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
-LEDGER_ENABLED ?= true
-SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
-TM_VERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::') # grab everything after the space in "github.com/tendermint/tendermint v0.34.7"
-HTTPS_GIT := https://github.com/fanfury-sports/fury.git
 DOCKER := $(shell which docker)
-DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR)/proto:/workspace --workdir /workspace bufbuild/buf
 BUILDDIR ?= $(CURDIR)/build
+LEDGER_ENABLED ?= true
 
-GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
-GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
+# ********** Golang configs **********
 
 export GO111MODULE = on
 
-# process build tags
+# the Go version to use in reproducible build
+GO_VERSION := 1.18.1
+
+# currently installed Go version
+GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
+GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
+
+# minimum supported Go version
+GO_MINIMUM_MAJOR_VERSION = $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f2 | cut -d'.' -f1)
+GO_MINIMUM_MINOR_VERSION = $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f2 | cut -d'.' -f2)
+
+GO_VERSION_ERR_MSG = ❌ ERROR: Go version $(GO_MINIMUM_MAJOR_VERSION).$(GO_MINIMUM_MINOR_VERSION)+ is required
+
+# ********** process build tags **********
 
 build_tags = netgo
 ifeq ($(LEDGER_ENABLED),true)
-  ifeq ($(OS),Windows_NT)
-    GCCEXE = $(shell where gcc.exe 2> NUL)
-    ifeq ($(GCCEXE),)
-      $(error gcc.exe not installed for ledger support, please install or set LEDGER_ENABLED=false)
-    else
-      build_tags += ledger
-    endif
-  else
-    UNAME_S = $(shell uname -s)
-    ifeq ($(UNAME_S),OpenBSD)
-      $(warning OpenBSD detected, disabling ledger support (https://github.com/cosmos/cosmos-sdk/issues/1988))
-    else
-      GCC = $(shell command -v gcc 2> /dev/null)
-      ifeq ($(GCC),)
-        $(error gcc not installed for ledger support, please install or set LEDGER_ENABLED=false)
-      else
-        build_tags += ledger
-      endif
-    endif
-  endif
+	ifeq ($(OS),Windows_NT)
+		GCCEXE = $(shell where gcc.exe 2> NUL)
+		ifeq ($(GCCEXE),)
+			$(error gcc.exe not installed for ledger support, please install or set LEDGER_ENABLED=false)
+		else
+			build_tags += ledger
+		endif
+	else
+		UNAME_S = $(shell uname -s)
+		ifeq ($(UNAME_S),OpenBSD)
+			$(warning OpenBSD detected, disabling ledger support (https://github.com/cosmos/cosmos-sdk/issues/1988))
+		else
+			GCC = $(shell command -v gcc 2> /dev/null)
+			ifeq ($(GCC),)
+				$(error gcc not installed for ledger support, please install or set LEDGER_ENABLED=false)
+			else
+				build_tags += ledger
+			endif
+		endif
+	endif
 endif
 
 ifeq (cleveldb,$(findstring cleveldb,$(FURY_BUILD_OPTIONS)))
-  build_tags += gcc
+	build_tags += gcc cleveldb
+else ifeq (rocksdb,$(findstring rocksdb,$(FURY_BUILD_OPTIONS)))
+	build_tags += gcc rocksdb
 endif
-
-ifeq (secp,$(findstring secp,$(FURY_BUILD_OPTIONS)))
-  build_tags += libsecp256k1_sdk
-endif
+build_tags += $(BUILD_TAGS)
+build_tags := $(strip $(build_tags))
 
 whitespace :=
-whitespace += $(whitespace)
+whitespace := $(whitespace) $(whitespace)
 comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
-# process linker flags
+# ********** process linker flags **********
 
 ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=fury \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=furyd \
-		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
-		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
-			-X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TM_VERSION)
+          -X github.com/cosmos/cosmos-sdk/version.AppName=furyd \
+          -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
+          -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
+          -X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)
 
-# DB backend selection
 ifeq (cleveldb,$(findstring cleveldb,$(FURY_BUILD_OPTIONS)))
-  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
+	ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
+else ifeq (rocksdb,$(findstring rocksdb,$(FURY_BUILD_OPTIONS)))
+	ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=rocksdb
 endif
-ifeq (badgerdb,$(findstring badgerdb,$(FURY_BUILD_OPTIONS)))
-  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=badgerdb
-  BUILD_TAGS += badgerdb
-endif
-# handle rocksdb
-ifeq (rocksdb,$(findstring rocksdb,$(FURY_BUILD_OPTIONS)))
-  CGO_ENABLED=1
-  BUILD_TAGS += rocksdb
-  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=rocksdb
-endif
-# handle boltdb
-ifeq (boltdb,$(findstring boltdb,$(FURY_BUILD_OPTIONS)))
-  BUILD_TAGS += boltdb
-  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=boltdb
-endif
-
 ifeq (,$(findstring nostrip,$(FURY_BUILD_OPTIONS)))
-  ldflags += -w -s
+	ldflags += -w -s
+endif
+ifeq ($(LINK_STATICALLY),true)
+	ldflags += -linkmode=external -extldflags "-Wl,-z,muldefs -static"
 endif
 ldflags += $(LDFLAGS)
 ldflags := $(strip $(ldflags))
 
-build_tags += $(BUILD_TAGS)
-build_tags := $(strip $(build_tags))
-
-BUILD_FLAGS := -tags "$(build_tags)" -ldflags '$(ldflags)'
+BUILD_FLAGS := -tags '$(build_tags)' -ldflags '$(ldflags)'
 # check for nostrip option
 ifeq (,$(findstring nostrip,$(FURY_BUILD_OPTIONS)))
-  BUILD_FLAGS += -trimpath
+	BUILD_FLAGS += -trimpath
 endif
 
-###############################################################################
-###                                  Build                                  ###
-###############################################################################
+all: proto-gen lint test install
 
-check_version:
-ifneq ($(GO_MINOR_VERSION),18)
-	@echo "ERROR: Go version 1.18 is required for this version of FURY. Go 1.19 has changes that are believed to break consensus."
-	exit 1
-endif
+################################################################################
+###                                  Build                                   ###
+################################################################################
 
-all: install lint test
+install: enforce-go-version
+	@echo "🤖 Installing furyd..."
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/furyd
+	@echo "✅ Completed installation!"
 
-BUILD_TARGETS := build install
+build: enforce-go-version
+	@echo "🤖 Building furyd..."
+	go build $(BUILD_FLAGS) -o $(BUILDDIR)/ ./cmd/furyd
+	@echo "✅ Completed build!"
 
-build: BUILD_ARGS=-o $(BUILDDIR)/
+# For use when publishing releases
+#
+# Copied from Osmosis:
+# https://github.com/osmosis-labs/osmosis/blob/v14.0.1/Makefile#L111
+build-reproducible: build-reproducible-amd64 build-reproducible-arm64
 
-$(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
-	GOWORK=off go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
+build-reproducible-amd64: go.sum $(BUILDDIR)/
+	$(DOCKER) buildx create --name furybuilder || true
+	$(DOCKER) buildx use furybuilder
+	$(DOCKER) buildx build \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		--build-arg RUNNER_IMAGE=alpine:3.17 \
+		--platform linux/amd64 \
+		-t fury:local-amd64 \
+		--load \
+		-f Dockerfile .
+	$(DOCKER) rm -f furybinary || true
+	$(DOCKER) create -ti --name furybinary fury:local-amd64
+	$(DOCKER) cp furybinary:/bin/furyd $(BUILDDIR)/furyd-linux-amd64
+	$(DOCKER) rm -f furybinary
 
-$(BUILDDIR)/:
-	mkdir -p $(BUILDDIR)/
+build-reproducible-arm64: go.sum $(BUILDDIR)/
+	$(DOCKER) buildx create --name furybuilder || true
+	$(DOCKER) buildx use furybuilder
+	$(DOCKER) buildx build \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		--build-arg RUNNER_IMAGE=alpine:3.17 \
+		--platform linux/arm64 \
+		-t fury:local-arm64 \
+		--load \
+		-f Dockerfile .
+	$(DOCKER) rm -f furybinary || true
+	$(DOCKER) create -ti --name furybinary fury:local-arm64
+	$(DOCKER) cp furybinary:/bin/furyd $(BUILDDIR)/furyd-linux-arm64
+	$(DOCKER) rm -f furybinary
 
-build-linux: go.sum
-	LEDGER_ENABLED=false GOOS=linux GOARCH=amd64 $(MAKE) build
+# Make sure that Go version is 1.19+
+#
+# From Osmosis discord:
+# https://discord.com/channels/798583171548840026/837144686387920936/1049449765240315925
+#
+# > Valardragon - 12/05/2022 10:18 PM
+# > It was just pointed out from `@jhernandez | stargaze.zone`, that the choice
+#   of golang version between go 1.18 and go 1.19 is consensus critical.
+#   With insufficient info, this preliminarily seems due to go 1.19 changing the
+#   memory model format, and something state-affecting in cosmwasm getting altered.
+#   https://github.com/persistenceOne/incident-reports/blob/main/06-nov-2022_V4_upgrade_halt.md
+enforce-go-version:
+	@echo "🤖 Go version: $(GO_MAJOR_VERSION).$(GO_MINOR_VERSION)"
+	@if [ $(GO_MAJOR_VERSION) -gt $(GO_MINIMUM_MAJOR_VERSION) ]; then \
+		exit 0; \
+	elif [ $(GO_MAJOR_VERSION) -lt $(GO_MINIMUM_MAJOR_VERSION) ]; then \
+		echo '$(GO_VERSION_ERR_MSG)'; \
+		exit 1; \
+	elif [ $(GO_MINOR_VERSION) -lt $(GO_MINIMUM_MINOR_VERSION) ]; then \
+		echo '$(GO_VERSION_ERR_MSG)'; \
+		exit 1; \
+	fi
 
-build-fury-linux: go.sum
-	LEDGER_ENABLED=false GOOS=linux GOARCH=amd64 $(MAKE) build
+################################################################################
+###                                  Tests                                   ###
+################################################################################
 
-go-mod-cache: go.sum
-	@echo "--> Download go modules to local cache"
-	@go mod download
+test:
+	@echo "🤖 Running tests..."
+	go test -mod=readonly ./x/...
+	@echo "✅ Completed tests!"
 
-go.sum: go.mod
-	echo "Ensure dependencies have not been modified ..." >&2
-	@go mod verify
+################################################################################
+###                                 Protobuf                                 ###
+################################################################################
 
-draw-deps:
-	@# requires brew install graphviz or apt-get install graphviz
-	go get github.com/RobotsAndPencils/goviz
-	@goviz -i ./cmd/furyd -d 2 | dot -Tpng -o dependency-graph.png
-
-clean:
-	rm -rf $(CURDIR)/artifacts/
-
-distclean: clean
-	rm -rf vendor/
-
-###############################################################################
-###                                  Proto                                  ###
-###############################################################################
-
-proto-all: proto-format proto-gen
-
-proto:
-	@echo
-	@echo "=========== Generate Message ============"
-	@echo
-	./scripts/protocgen.sh
-	@echo
-	@echo "=========== Generate Complete ============"
-	@echo
-
-docs:
-	@echo
-	@echo "=========== Generate Message ============"
-	@echo
-	./scripts/generate-docs.sh
-
-	statik -src=client/docs/static -dest=client/docs -f -m
-	@if [ -n "$(git status --porcelain)" ]; then \
-        echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
-        exit 1;\
-    else \
-        echo "\033[92mSwagger docs are in sync\033[0m";\
-    fi
-	@echo
-	@echo "=========== Generate Complete ============"
-	@echo
-.PHONY: docs
-
+# We use osmolabs' docker image instead of tendermintdev/sdk-proto-gen.
+# The only difference is that the Osmosis version uses Go 1.19 while the
+# tendermintdev one uses 1.18.
 protoVer=v0.8
-protoImageName=fanfury/fanfury:$(protoVer)
-containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
-containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
+protoImageName=osmolabs/osmo-proto-gen:$(protoVer)
+containerProtoGenGo=fury-proto-gen-go-$(protoVer)
+containerProtoGenSwagger=fury-proto-gen-swagger-$(protoVer)
 
-proto-gen:
-	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+proto-gen: proto-go-gen proto-swagger-gen
+
+proto-go-gen:
+	@echo "🤖 Generating Go code from protobuf..."
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenGo}$$"; then docker start -a $(containerProtoGenGo); else docker run --name $(containerProtoGenGo) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
 		sh ./scripts/protocgen.sh; fi
+	@echo "✅ Completed Go code generation!"
 
-proto-format:
-	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+proto-swagger-gen:
+	@echo "🤖 Generating Swagger code from protobuf..."
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenSwagger}$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protoc-swagger-gen.sh; fi
+	@echo "✅ Completed Swagger code generation!"
 
-proto-image-build:
-	@DOCKER_BUILDKIT=1 docker build -t $(protoImageName) -f ./proto/Dockerfile ./proto
+################################################################################
+###                                  Docker                                  ###
+################################################################################
 
-proto-image-push:
-	docker push $(protoImageName)
+RUNNER_BASE_IMAGE_DISTROLESS := gcr.io/distroless/static-debian11
+RUNNER_BASE_IMAGE_ALPINE := alpine:3.17
+RUNNER_BASE_IMAGE_NONROOT := gcr.io/distroless/static-debian11:nonroot
 
-proto-lint:
-	@$(DOCKER_BUF) lint --error-format=json
+docker-build:
+	@DOCKER_BUILDKIT=1 $(DOCKER) build \
+		-t fury:local \
+		-t fury:local-distroless \
+		--build-arg GO_VERSION=$(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) \
+		--build-arg RUNNER_IMAGE=$(RUNNER_BASE_IMAGE_DISTROLESS) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		-f Dockerfile .
 
-proto-check-breaking:
-	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=master
+docker-build-alpine:
+	@DOCKER_BUILDKIT=1 $(DOCKER) build \
+		-t fury:local-alpine \
+		--build-arg GO_VERSION=$(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) \
+		--build-arg RUNNER_IMAGE=$(RUNNER_BASE_IMAGE_ALPINE) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		-f Dockerfile .
 
+docker-build-nonroot:
+	@DOCKER_BUILDKIT=1 $(DOCKER) build \
+		-t fury:local-nonroot \
+		--build-arg GO_VERSION=$(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) \
+		--build-arg RUNNER_IMAGE=$(RUNNER_BASE_IMAGE_NONROOT) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		-f Dockerfile .
 
-###############################################################################
-###                           Tests & Simulation                            ###
-###############################################################################
+docker-build-distroless: docker-build
 
-PACKAGES_UNIT=$(shell go list ./... | grep -E -v 'tests/simulator')
-TEST_PACKAGES=./...
+################################################################################
+###                                 Linting                                  ###
+################################################################################
 
-test: test-unit
-test-all: test-unit test-race test-cover
-
-test-unit:
-	@VERSION=$(VERSION) go test -mod=readonly -tags='ledger test_ledger_mock norace' $(PACKAGES_UNIT)
-
-test-race:
-	@VERSION=$(VERSION) go test -mod=readonly -race -tags='ledger test_ledger_mock' $(PACKAGES_UNIT)
-
-test-cover:
-	@VERSION=$(VERSION) mkdir -p .audit/gotest >> /dev/null && go test -timeout 30m -mod=readonly -coverprofile=".audit/gotest/coverage.out" -json -covermode=atomic -tags="norace" $(PACKAGES_UNIT)  > .audit/gotest/report.json
-
-benchmark:
-	@go test -mod=readonly -bench=. $(PACKAGES_UNIT)
-
-
-###############################################################################
-###                                Linting                                  ###
-###############################################################################
-
-golangci_lint_cmd=go run github.com/golangci/golangci-lint/cmd/golangci-lint
+golangci_lint_cmd=github.com/golangci/golangci-lint/cmd/golangci-lint
 
 lint:
-	@echo "--> Running linter"
-	$(golangci_lint_cmd) run --timeout=10m
-	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md"
-
-format:
-	$(golangci_lint_cmd) run ./... --fix
-	@go run mvdan.cc/gofumpt -l -w x/ app/
-	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md" --fix
-
-mdlint:
-	@echo "--> Running markdown linter"
-	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md"
-
-markdown:
-	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md" --fix
-
-###############################################################################
-###                              Documentation                              ###
-###############################################################################
-
-update-swagger-docs: statik
-	$(BINDIR)/statik -src=client/docs/swagger-ui -dest=client/docs -f -m
-	@if [ -n "$(git status --porcelain)" ]; then \
-        echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
-        exit 1;\
-    else \
-        echo "\033[92mSwagger docs are in sync\033[0m";\
-    fi
-.PHONY: update-swagger-docs
-
-godocs:
-	@echo "--> Wait a few seconds and visit http://localhost:6060/pkg/github.com/Fanfury-Sports/FURY/types"
-	godoc -http=:6060
-
-# This builds a docs site for each branch/tag in `./docs/versions`
-# and copies each site to a version prefixed path. The last entry inside
-# the `versions` file will be the default root index.html.
-build-docs:
-	@cd docs && \
-	while read -r branch path_prefix; do \
-		(git checkout $${branch} && npm install && VUEPRESS_BASE="/$${path_prefix}/" npm run build) ; \
-		mkdir -p ~/output/$${path_prefix} ; \
-		cp -r .vuepress/dist/* ~/output/$${path_prefix}/ ; \
-		cp ~/output/$${path_prefix}/index.html ~/output ; \
-	done < versions ;
-.PHONY: build-docs
-
-sync-docs:
-	cd ~/output && \
-	echo "role_arn = ${DEPLOYMENT_ROLE_ARN}" >> /root/.aws/config ; \
-	echo "CI job = ${CIRCLE_BUILD_URL}" >> version.html ; \
-	aws s3 sync . s3://${WEBSITE_BUCKET} --profile terraform --delete ; \
-	aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --profile terraform --path "/*" ;
-.PHONY: sync-docs
-
-###############################################################################
-###                              SONARQUBE                                  ###
-###############################################################################
-
-analyze: ## analyze the project for code quality
-	@$(MAKE) .sonar-scanner
-
-SONAR_TOKEN ?= "SonarScannerToken"
-SONAR_HOST_URL ?=http://localhost:9000
-SONAR_PROJECT_KEY ?= $(PROJECT_KEY)
-
-SONAR_WDR ?= /usr/src
-SONAR_PROJECT_KEY := $(subst $(subst ,, ),:,$(subst /,--,$(SONAR_PROJECT_KEY)))
-.sonar-scanner:
-	$(DOCKER) run \
-		--rm \
-		-e SONAR_HOST_URL="$(SONAR_HOST_URL)" \
-		-e SONAR_LOGIN="$(SONAR_TOKEN)" \
-		-e SONAR_PROJECTKEY="$(SONAR_PROJECT_KEY)" \
-		-v "${CURDIR}:$(SONAR_WDR)" \
-		-w $(SONAR_WDR) \
-		sonarsource/sonar-scanner-cli \
-		-D"sonar.projectKey=$(SONAR_PROJECT_KEY)" \
-		-Dproject.settings=sonar-project.properties
-
-
-###############################################################################
-###                                Localnet                                 ###
-###############################################################################
-
-
-build-docker-fury:
-	@$(MAKE) -C networks/fury
-
-# Run a 4-node testnet locally
-localnet-start: build-fury-linux localnet-stop
-	@if ! [ -f build/node0/fury/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/fury:Z fanfury/fanfury:furyd testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test ; fi
-	docker-compose up -d
-
-localnet-stop:
-	docker-compose down
-
-.PHONY: build-docker-fury localnet-start localnet-stop
+	@echo "🤖 Running linter..."
+	go run $(golangci_lint_cmd) run --timeout=10m
+	@echo "✅ Completed linting!"

@@ -1,0 +1,258 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fury/mint/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/cosmos/mint/v1beta1/endphase_status": {
+      "get": {
+        "summary": "EndPhaseStatus returns the current minting phase status.",
+        "operationId": "EndPhaseStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.mint.QueryEndPhaseStatusResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/cosmos/mint/v1beta1/inflation": {
+      "get": {
+        "summary": "Inflation returns the current minting inflation value.",
+        "operationId": "Inflation",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.mint.QueryInflationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/cosmos/mint/v1beta1/phase_provisions": {
+      "get": {
+        "summary": "PhaseProvisions current minting phase provisions value.",
+        "operationId": "PhaseProvisions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.mint.QueryPhaseProvisionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/cosmos/mint/v1beta1/phasestep": {
+      "get": {
+        "summary": "PhaseStep returns the current phase step.",
+        "operationId": "PhaseStep",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.mint.QueryPhaseStepResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/mint/params": {
+      "get": {
+        "summary": "Params queries the parameters of the module.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.mint.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "furysports.fury.mint.Params": {
+      "type": "object",
+      "properties": {
+        "mint_denom": {
+          "type": "string",
+          "description": "mint_denom is the type of coin to mint."
+        },
+        "blocks_per_year": {
+          "type": "string",
+          "format": "int64",
+          "description": "blocks_per_year is expected blocks per year."
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.mint.Phase"
+          },
+          "description": "phases contains phases of inflation."
+        },
+        "exclude_amount": {
+          "type": "string",
+          "description": "exclude_amount is the excluded amount form being calculated in inflation."
+        }
+      },
+      "description": "Params define the parameters for the module."
+    },
+    "furysports.fury.mint.Phase": {
+      "type": "object",
+      "properties": {
+        "inflation": {
+          "type": "string",
+          "description": "inflation is the current phase inflation rate."
+        },
+        "year_coefficient": {
+          "type": "string",
+          "description": "year_coefficient is the proportion of a complete year."
+        }
+      },
+      "description": "Phase defines the phase parameters for the module."
+    },
+    "furysports.fury.mint.QueryEndPhaseStatusResponse": {
+      "type": "object",
+      "properties": {
+        "is_in_end_phase": {
+          "type": "boolean",
+          "description": "is_in_end_phase is true if there is no more valid phase in the mint\nparameters."
+        }
+      },
+      "description": "QueryEndPhaseStatusResponse is the response type for the Query/Inflation RPC\nmethod.\nQuery/EndPhaseStatus RPC method."
+    },
+    "furysports.fury.mint.QueryInflationResponse": {
+      "type": "object",
+      "properties": {
+        "inflation": {
+          "type": "string",
+          "format": "byte",
+          "description": "inflation is the current minting inflation value."
+        }
+      },
+      "description": "QueryInflationResponse is the response type for the Query/Inflation RPC\nmethod.\nQuery/Inflation RPC method."
+    },
+    "furysports.fury.mint.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furysports.fury.mint.Params",
+          "description": "params contains all of the parameters of this module."
+        }
+      },
+      "description": "QueryParamsResponse is the response type for the Query/Params RPC method.\nQuery/Params RPC method."
+    },
+    "furysports.fury.mint.QueryPhaseProvisionsResponse": {
+      "type": "object",
+      "properties": {
+        "phase_provisions": {
+          "type": "string",
+          "format": "byte",
+          "description": "phase_provisions is the current minting phase provisions value."
+        }
+      },
+      "description": "QueryPhaseProvisionsResponse is the response type for the\nQuery/PhaseProvisions RPC method."
+    },
+    "furysports.fury.mint.QueryPhaseStepResponse": {
+      "type": "object",
+      "properties": {
+        "phase_step": {
+          "type": "integer",
+          "format": "int32",
+          "description": "phase_step is the current phase number of the blockchain."
+        }
+      },
+      "description": "QueryPhaseStepResponse is the response type for the Query/Inflation RPC\nmethod.\nQuery/PhaseStep RPC method."
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}

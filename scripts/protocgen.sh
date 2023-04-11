@@ -1,30 +1,24 @@
-#!/usr/bin/env bash
+#!/bin/sh
+#
+# This script is intended to be run inside the osmolabs/osmo-proto-gen:v0.8
+# docker container: https://hub.docker.com/r/osmolabs/osmo-proto-gen
 
 set -eo pipefail
 
-# get protoc executions
-go get github.com/regen-network/cosmos-proto/protoc-gen-gocosmos@v1.3.3-alpha.regen.1 2>/dev/null
-
-# get cosmos sdk from github
-go get github.com/cosmos/cosmos-sdk@v0.45.11 2>/dev/null
-
-echo "Generating gogo proto code"
-cd proto
-proto_dirs=$(find ./fury -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find ./proto -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 for dir in $proto_dirs; do
   for file in $(find "${dir}" -maxdepth 1 -name '*.proto'); do
-    if grep go_package $file &>/dev/null; then
-      buf generate --template buf.gen.gogo.yaml $file
+    if grep "option go_package" $file &> /dev/null ; then
+      echo $file
+      buf generate --template ./proto/buf.gen.go.yaml $file
     fi
   done
 done
 
-cd ..
-
 # move proto files to the right places
-#
-# Note: Proto files are suffixed with the current binary version.
-cp -r github.com/fanfury-sports/fury/* ./
-rm -rf github.com
+if [ -d "./github.com/fanfury-sports/fury" ]; then
+  cp -r github.com/fanfury-sports/fury/* ./
+  rm -rf github.com
+fi
 
-go mod tidy -compat=1.18
+go mod tidy

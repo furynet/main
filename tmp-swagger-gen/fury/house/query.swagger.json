@@ -1,0 +1,479 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fury/house/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/fury/deposits": {
+      "get": {
+        "summary": "Deposits queries all deposits.",
+        "operationId": "Deposits",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.house.QueryDepositsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/deposits/{depositor_address}": {
+      "get": {
+        "summary": "DepositorDeposits queries deposits info for given depositor.",
+        "operationId": "DepositorDeposits",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.house.QueryDepositorDepositsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "depositor_address",
+            "description": "depositor_addr defines the depositor address to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/house/params": {
+      "get": {
+        "summary": "Params queries the parameters of the module.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.house.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/withdrawals/{depositor_address}": {
+      "get": {
+        "summary": "DepositorWithdrawals queries withdrawals info for given depositor.",
+        "operationId": "DepositorWithdrawals",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.house.QueryDepositorWithdrawalsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "depositor_address",
+            "description": "depositor_addr defines the depositor address to query for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cosmos.base.query.v1beta1.PageRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte",
+          "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set."
+        },
+        "offset": {
+          "type": "string",
+          "format": "uint64",
+          "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set."
+        },
+        "limit": {
+          "type": "string",
+          "format": "uint64",
+          "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app."
+        },
+        "count_total": {
+          "type": "boolean",
+          "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set."
+        },
+        "reverse": {
+          "type": "boolean",
+          "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43"
+        }
+      },
+      "description": "message SomeRequest {\n         Foo some_parameter = 1;\n         PageRequest pagination = 2;\n }",
+      "title": "PageRequest is to be embedded in gRPC request messages for efficient\npagination. Ex:"
+    },
+    "cosmos.base.query.v1beta1.PageResponse": {
+      "type": "object",
+      "properties": {
+        "next_key": {
+          "type": "string",
+          "format": "byte",
+          "description": "next_key is the key to be passed to PageRequest.key to\nquery the next page most efficiently. It will be empty if\nthere are no more results."
+        },
+        "total": {
+          "type": "string",
+          "format": "uint64",
+          "title": "total is total number of results available if PageRequest.count_total\nwas set, its value is undefined otherwise"
+        }
+      },
+      "description": "PageResponse is to be embedded in gRPC response messages where the\ncorresponding request message has used PageRequest.\n\n message SomeResponse {\n         repeated Bar results = 1;\n         PageResponse page = 2;\n }"
+    },
+    "furysports.fury.house.Deposit": {
+      "type": "object",
+      "properties": {
+        "creator": {
+          "type": "string",
+          "description": "creator is the bech32-encoded address of the depositor."
+        },
+        "sport_event_uid": {
+          "type": "string",
+          "description": "sport_event_uid is the uid of sport event against which deposit is being\nmade."
+        },
+        "participation_index": {
+          "type": "string",
+          "format": "uint64",
+          "title": "participation_index index corresponding to the book participation"
+        },
+        "amount": {
+          "type": "string",
+          "description": "amount is the amount being deposited."
+        },
+        "fee": {
+          "type": "string",
+          "description": "fee is deducted from the amount on deposition."
+        },
+        "liquidity": {
+          "type": "string",
+          "description": "liquidity is the liquidity being provided to the house after fee deduction."
+        },
+        "withdrawal_count": {
+          "type": "string",
+          "format": "uint64",
+          "title": "withdrawal_count is the total count of the withdrawal attempts"
+        },
+        "total_withdrawal_amount": {
+          "type": "string",
+          "title": "total_withdrawal_amount is the total amount of withdrawal attempts"
+        }
+      },
+      "description": "Deposit represents the deposit against a sport event held by an account."
+    },
+    "furysports.fury.house.Params": {
+      "type": "object",
+      "properties": {
+        "min_deposit": {
+          "type": "string",
+          "description": "min_deposit is the minimum amount of acceptable deposit."
+        },
+        "house_participation_fee": {
+          "type": "string",
+          "title": "house_participation_fee is the % of the deposit to be paid for a house\nparticipation by the user"
+        }
+      },
+      "description": "Params define the parameters for the house module."
+    },
+    "furysports.fury.house.QueryDepositorDepositsResponse": {
+      "type": "object",
+      "properties": {
+        "deposits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.house.Deposit"
+          },
+          "description": "deposits contains all the queried deposits."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryDepositorDepositsResponse is response type for the\nQuery/DepositorDeposits RPC method"
+    },
+    "furysports.fury.house.QueryDepositorWithdrawalsResponse": {
+      "type": "object",
+      "properties": {
+        "withdrawals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.house.Withdrawal"
+          },
+          "description": "withdrawals contains all the queried withdrawals."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryDepositorWithdrawalsResponse is response type for the\nQuery/DepositorWithdrawals RPC method"
+    },
+    "furysports.fury.house.QueryDepositsResponse": {
+      "type": "object",
+      "properties": {
+        "deposits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.house.Deposit"
+          },
+          "description": "deposits contains all the queried deposits."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse",
+          "description": "pagination defines the pagination in the response."
+        }
+      },
+      "title": "QueryDepositsResponse is response type for the Query/Deposits RPC method"
+    },
+    "furysports.fury.house.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furysports.fury.house.Params",
+          "description": "params holds all the parameters of this module."
+        }
+      },
+      "description": "QueryParamsResponse is the response type for the Query/Params RPC method.\nQuery/Params RPC method."
+    },
+    "furysports.fury.house.Withdrawal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "withdrawal is the withdrawal attempt id."
+        },
+        "depositor_address": {
+          "type": "string",
+          "description": "depositorAddress is the bech32-encoded address of the depositor."
+        },
+        "sport_event_uid": {
+          "type": "string",
+          "description": "sport_event_uid is the uid of sport-event against which the deposit is\nbeing made."
+        },
+        "participation_index": {
+          "type": "string",
+          "format": "uint64",
+          "title": "participation_index is the id corresponding to the book participation"
+        },
+        "mode": {
+          "$ref": "#/definitions/furysports.fury.house.WithdrawalMode",
+          "title": "mode is the withdrawal mode enum value"
+        },
+        "amount": {
+          "type": "string",
+          "description": "amount is the amount being withdrawn."
+        }
+      },
+      "description": "Withdrawal represents the withdrawal against a deposit."
+    },
+    "furysports.fury.house.WithdrawalMode": {
+      "type": "string",
+      "enum": [
+        "WITHDRAWAL_MODE_UNSPECIFIED",
+        "WITHDRAWAL_MODE_FULL",
+        "WITHDRAWAL_MODE_PARTIAL"
+      ],
+      "default": "WITHDRAWAL_MODE_UNSPECIFIED",
+      "description": "WithdrawalMode is the enum type for the withdrawal mode.\n\n - WITHDRAWAL_MODE_UNSPECIFIED: invalid\n - WITHDRAWAL_MODE_FULL: full\n - WITHDRAWAL_MODE_PARTIAL: partial"
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}

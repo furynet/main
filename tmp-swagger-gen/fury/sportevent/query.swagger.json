@@ -1,0 +1,424 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fury/sportevent/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/fury/sport-event/params": {
+      "get": {
+        "summary": "Params queries the parameters of the module.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.sportevent.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/sport-event/sport_events": {
+      "get": {
+        "summary": "Queries a list of SportEvent items.",
+        "operationId": "SportEvents",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.sportevent.QuerySportEventsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/sport-event/sport_events_by_uids/{uids}": {
+      "get": {
+        "summary": "Queries a list of SportEventsByUIDs items.",
+        "operationId": "SportEventsByUIDs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.sportevent.QuerySportEventsByUIDsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uids",
+            "in": "path",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "csv",
+            "minItems": 1
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/sport-event/{uid}": {
+      "get": {
+        "summary": "Queries a SportEvent by uid.",
+        "operationId": "SportEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.sportevent.QuerySportEventResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cosmos.base.query.v1beta1.PageRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte",
+          "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set."
+        },
+        "offset": {
+          "type": "string",
+          "format": "uint64",
+          "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set."
+        },
+        "limit": {
+          "type": "string",
+          "format": "uint64",
+          "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app."
+        },
+        "count_total": {
+          "type": "boolean",
+          "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set."
+        },
+        "reverse": {
+          "type": "boolean",
+          "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43"
+        }
+      },
+      "description": "message SomeRequest {\n         Foo some_parameter = 1;\n         PageRequest pagination = 2;\n }",
+      "title": "PageRequest is to be embedded in gRPC request messages for efficient\npagination. Ex:"
+    },
+    "cosmos.base.query.v1beta1.PageResponse": {
+      "type": "object",
+      "properties": {
+        "next_key": {
+          "type": "string",
+          "format": "byte",
+          "description": "next_key is the key to be passed to PageRequest.key to\nquery the next page most efficiently. It will be empty if\nthere are no more results."
+        },
+        "total": {
+          "type": "string",
+          "format": "uint64",
+          "title": "total is total number of results available if PageRequest.count_total\nwas set, its value is undefined otherwise"
+        }
+      },
+      "description": "PageResponse is to be embedded in gRPC response messages where the\ncorresponding request message has used PageRequest.\n\n message SomeResponse {\n         repeated Bar results = 1;\n         PageResponse page = 2;\n }"
+    },
+    "furysports.fury.sportevent.EventBetConstraints": {
+      "type": "object",
+      "properties": {
+        "min_amount": {
+          "type": "string",
+          "description": "min_amount is the minimum allowed bet amount for a sport-event."
+        },
+        "bet_fee": {
+          "type": "string",
+          "description": "bet_fee is the fee that thebettor needs to pay to bet on the sport-event."
+        }
+      },
+      "title": "Bet constraints parent group for a sport-event"
+    },
+    "furysports.fury.sportevent.Odds": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "uid is the universal unique identifier of the odds."
+        },
+        "meta": {
+          "type": "string",
+          "description": "meta contains any human-readable metadata of the odds."
+        }
+      },
+      "description": "Odds is a representation of and sport-event odds items."
+    },
+    "furysports.fury.sportevent.Params": {
+      "type": "object",
+      "properties": {
+        "event_min_bet_amount": {
+          "type": "string",
+          "description": "event_min_bet_amount default minimum bet amount for a sport-event."
+        },
+        "event_min_bet_fee": {
+          "type": "string",
+          "description": "event_min_bet_fee default minimum bet fee for a sport-event."
+        },
+        "event_max_sr_contribution": {
+          "type": "string",
+          "description": "event_max_sr_contribution default max sr contribution for a sport-event."
+        }
+      },
+      "description": "Params defines the parameters for the module.\ncontains bet constraints associated to a sport-event."
+    },
+    "furysports.fury.sportevent.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furysports.fury.sportevent.Params",
+          "description": "params hold all the parameters of this module."
+        }
+      },
+      "description": "QueryParamsResponse is the response type for the Query/Params RPC method.\nQuery/Params RPC method."
+    },
+    "furysports.fury.sportevent.QuerySportEventResponse": {
+      "type": "object",
+      "properties": {
+        "sport_event": {
+          "$ref": "#/definitions/furysports.fury.sportevent.SportEvent"
+        }
+      },
+      "description": "QuerySportEventRequest is the response type for the Query/{uid} RPC method.\nQuery/SportEvent RPC method."
+    },
+    "furysports.fury.sportevent.QuerySportEventsByUIDsResponse": {
+      "type": "object",
+      "properties": {
+        "sport_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.sportevent.SportEvent"
+          }
+        },
+        "failed_events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "QuerySportEventsByUIDsResponse is the response type for the\nQuery/sposport_events_by_uids  RPC method.\nQuery/SportEventsByUIDs RPC method."
+    },
+    "furysports.fury.sportevent.QuerySportEventsResponse": {
+      "type": "object",
+      "properties": {
+        "sport_event": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.sportevent.SportEvent"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse"
+        }
+      },
+      "description": "QuerySportEventsResponse is the response type for the Query/sport_events RPC\nmethod.\nQuery/SportEvents RPC method."
+    },
+    "furysports.fury.sportevent.SportEvent": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "uid is the universal unique identifier of the sport-event."
+        },
+        "start_ts": {
+          "type": "string",
+          "format": "uint64",
+          "description": "start_ts is the start timestamp of the sport-event."
+        },
+        "end_ts": {
+          "type": "string",
+          "format": "uint64",
+          "description": "end_ts is the end timestamp of the sport-event."
+        },
+        "odds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.sportevent.Odds"
+          },
+          "description": "odds is the list of odds of the sport-event."
+        },
+        "winner_odds_uids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "winner_odds_uids is the list of winner odds universal unique identifiers."
+        },
+        "status": {
+          "$ref": "#/definitions/furysports.fury.sportevent.SportEventStatus",
+          "description": "status is the current status of the sport-event."
+        },
+        "resolution_ts": {
+          "type": "string",
+          "format": "uint64",
+          "description": "resolution_ts is the timestamp of the resolution of sport-event."
+        },
+        "creator": {
+          "type": "string",
+          "description": "creator is the address of the creator of sport-event."
+        },
+        "bet_constraints": {
+          "$ref": "#/definitions/furysports.fury.sportevent.EventBetConstraints",
+          "description": "bet_constraints holds the constraints of sport-event to accept bets."
+        },
+        "meta": {
+          "type": "string",
+          "description": "meta contains human-readable metadata of the sport-event."
+        },
+        "sr_contribution_for_house": {
+          "type": "string",
+          "title": "sr_contribution_for_house is the amount of contibution of house in the sr"
+        },
+        "book_uid": {
+          "type": "string",
+          "title": "book_uid is the unique identifier corresponding to the book"
+        }
+      },
+      "description": "SportEvent the representation of the sport-event to be stored in\nthe sport-event state."
+    },
+    "furysports.fury.sportevent.SportEventStatus": {
+      "type": "string",
+      "enum": [
+        "SPORT_EVENT_STATUS_UNSPECIFIED",
+        "SPORT_EVENT_STATUS_ACTIVE",
+        "SPORT_EVENT_STATUS_INACTIVE",
+        "SPORT_EVENT_STATUS_CANCELED",
+        "SPORT_EVENT_STATUS_ABORTED",
+        "SPORT_EVENT_STATUS_RESULT_DECLARED"
+      ],
+      "default": "SPORT_EVENT_STATUS_UNSPECIFIED",
+      "description": "- SPORT_EVENT_STATUS_UNSPECIFIED: unspecified event\n - SPORT_EVENT_STATUS_ACTIVE: event is active\n - SPORT_EVENT_STATUS_INACTIVE: event is inactive\n - SPORT_EVENT_STATUS_CANCELED: event is canceled\n - SPORT_EVENT_STATUS_ABORTED: event is aborted\n - SPORT_EVENT_STATUS_RESULT_DECLARED: result of the event is declared",
+      "title": "SportEventStatus is the sport-event status enumeration"
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}

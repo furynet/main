@@ -1,0 +1,153 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fury/strategicreserve/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/fury/strategic-reserve/params": {
+      "get": {
+        "summary": "Parameters queries the parameters of the module.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.strategicreserve.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/strategic-reserve/reserver": {
+      "get": {
+        "summary": "Reserver returns the Reserver value.",
+        "operationId": "Reserver",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.strategicreserve.QueryReserverResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "furysports.fury.strategicreserve.Params": {
+      "type": "object",
+      "properties": {
+        "committee_members": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "committee_members hold the list of committee members."
+        }
+      },
+      "description": "Params defines the parameters for the strategic reserve module."
+    },
+    "furysports.fury.strategicreserve.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furysports.fury.strategicreserve.Params",
+          "description": "params holds all the parameters of this module."
+        }
+      },
+      "description": "QueryParamsResponse is response type for the Query/Params RPC method.\nQuery/Params RPC method."
+    },
+    "furysports.fury.strategicreserve.QueryReserverResponse": {
+      "type": "object",
+      "properties": {
+        "reserver": {
+          "$ref": "#/definitions/furysports.fury.strategicreserve.Reserver",
+          "description": "reserver is a holder for sr fund management."
+        }
+      },
+      "description": "QueryReserverResponse is the response type for the Query/Inflation RPC\nmethod.\nQuery/Reserver RPC method."
+    },
+    "furysports.fury.strategicreserve.Reserver": {
+      "type": "object",
+      "properties": {
+        "sr_pool": {
+          "$ref": "#/definitions/furysports.fury.strategicreserve.SRPool",
+          "description": "sr_pool hold the sr pool properties of the reserver."
+        }
+      },
+      "description": "Reserver defines the parameters for the StrategicReserve module."
+    },
+    "furysports.fury.strategicreserve.SRPool": {
+      "type": "object",
+      "properties": {
+        "locked_amount": {
+          "type": "string",
+          "description": "locked_amount holds the amount of locked tokens in\nsr pool module account balance."
+        },
+        "unlocked_amount": {
+          "type": "string",
+          "description": "unlocked_amount holds the amount of unlocked tokens in\nsr pool module account balance."
+        }
+      },
+      "description": "SRPool defines the locked amount and the unlocked amount in the\nsr pool Account."
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}

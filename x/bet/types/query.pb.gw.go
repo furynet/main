@@ -767,19 +767,19 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fury", "bet", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fury", "bet", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Bet_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"fury", "bet", "creator", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Bet_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"fury", "bet", "creator", "uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_BetsByCreator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"fury", "creator", "bets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BetsByCreator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"fury", "creator", "bets"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Bets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"fury", "bets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Bets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"fury", "bets"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_BetsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"fury", "bets_by_uids"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BetsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"fury", "bets_by_uids"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ActiveBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fury", "active_bets", "sport_event_uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ActiveBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fury", "active_bets", "sport_event_uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_SettledBetsOfHeight_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fury", "settled_bets_of_height", "block_height"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SettledBetsOfHeight_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fury", "settled_bets_of_height", "block_height"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

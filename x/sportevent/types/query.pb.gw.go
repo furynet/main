@@ -418,13 +418,13 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fury", "sport-event", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fury", "sport-event", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_SportEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fury", "sport-event", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SportEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fury", "sport-event", "uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_SportEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fury", "sport-event", "sport_events"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SportEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fury", "sport-event", "sport_events"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_SportEventsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"fury", "sport-event", "sport_events_by_uids", "uids"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SportEventsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"fury", "sport-event", "sport_events_by_uids", "uids"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

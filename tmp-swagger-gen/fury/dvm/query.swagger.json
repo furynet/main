@@ -1,0 +1,520 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fury/dvm/query.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/fury/dvm/active_pubkeys_proposal/{id}": {
+      "get": {
+        "summary": "Queries an active proposal by id.",
+        "operationId": "ActivePublicKeysChangeProposal",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.dvm.QueryActivePublicKeysChangeProposalResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/dvm/active_pubkeys_proposals": {
+      "get": {
+        "summary": "Queries a list of active proposal items.",
+        "operationId": "ActivePublicKeysChangeProposals",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.dvm.QueryActivePublicKeysChangeProposalsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/dvm/finished_pubkeys_proposal/{id}": {
+      "get": {
+        "summary": "Queries a finished proposal by id.",
+        "operationId": "FinishedPublicKeysChangeProposal",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.dvm.QueryFinishedPublicKeysChangeProposalResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/dvm/finished_pubkeys_proposals": {
+      "get": {
+        "summary": "Queries a list of finished proposal items.",
+        "operationId": "FinishedPublicKeysChangeProposals",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.dvm.QueryFinishedPublicKeysChangeProposalsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pagination.key",
+            "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pagination.offset",
+            "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.limit",
+            "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "pagination.count_total",
+            "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "pagination.reverse",
+            "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/dvm/params": {
+      "get": {
+        "summary": "Params queries the parameters of the module.",
+        "operationId": "Params",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.dvm.QueryParamsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    },
+    "/fury/dvm/pub_keys": {
+      "get": {
+        "summary": "Queries a list of PubKeys items.",
+        "operationId": "PubKeys",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/furysports.fury.dvm.QueryPubKeysResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/grpc.gateway.runtime.Error"
+            }
+          }
+        },
+        "tags": [
+          "Query"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cosmos.base.query.v1beta1.PageRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte",
+          "description": "key is a value returned in PageResponse.next_key to begin\nquerying the next page most efficiently. Only one of offset or key\nshould be set."
+        },
+        "offset": {
+          "type": "string",
+          "format": "uint64",
+          "description": "offset is a numeric offset that can be used when key is unavailable.\nIt is less efficient than using key. Only one of offset or key should\nbe set."
+        },
+        "limit": {
+          "type": "string",
+          "format": "uint64",
+          "description": "limit is the total number of results to be returned in the result page.\nIf left empty it will default to a value to be set by each app."
+        },
+        "count_total": {
+          "type": "boolean",
+          "description": "count_total is set to true  to indicate that the result set should include\na count of the total number of items available for pagination in UIs.\ncount_total is only respected when offset is used. It is ignored when key\nis set."
+        },
+        "reverse": {
+          "type": "boolean",
+          "description": "reverse is set to true if results are to be returned in the descending order.\n\nSince: cosmos-sdk 0.43"
+        }
+      },
+      "description": "message SomeRequest {\n         Foo some_parameter = 1;\n         PageRequest pagination = 2;\n }",
+      "title": "PageRequest is to be embedded in gRPC request messages for efficient\npagination. Ex:"
+    },
+    "cosmos.base.query.v1beta1.PageResponse": {
+      "type": "object",
+      "properties": {
+        "next_key": {
+          "type": "string",
+          "format": "byte",
+          "description": "next_key is the key to be passed to PageRequest.key to\nquery the next page most efficiently. It will be empty if\nthere are no more results."
+        },
+        "total": {
+          "type": "string",
+          "format": "uint64",
+          "title": "total is total number of results available if PageRequest.count_total\nwas set, its value is undefined otherwise"
+        }
+      },
+      "description": "PageResponse is to be embedded in gRPC response messages where the\ncorresponding request message has used PageRequest.\n\n message SomeResponse {\n         repeated Bar results = 1;\n         PageResponse page = 2;\n }"
+    },
+    "furysports.fury.dvm.Params": {
+      "type": "object",
+      "description": "Params defines the parameters for the module."
+    },
+    "furysports.fury.dvm.ProposalResult": {
+      "type": "string",
+      "enum": [
+        "PROPOSAL_RESULT_UNSPECIFIED",
+        "PROPOSAL_RESULT_APPROVED",
+        "PROPOSAL_RESULT_REJECTED",
+        "PROPOSAL_RESULT_EXPIRED"
+      ],
+      "default": "PROPOSAL_RESULT_UNSPECIFIED",
+      "description": "ProposalResult is the enum type for the proposal result.\n\n - PROPOSAL_RESULT_UNSPECIFIED: unchosen value\n - PROPOSAL_RESULT_APPROVED: approved\n - PROPOSAL_RESULT_REJECTED: rejected\n - PROPOSAL_RESULT_EXPIRED: expired"
+    },
+    "furysports.fury.dvm.ProposalVote": {
+      "type": "string",
+      "enum": [
+        "PROPOSAL_VOTE_UNSPECIFIED",
+        "PROPOSAL_VOTE_NO",
+        "PROPOSAL_VOTE_YES"
+      ],
+      "default": "PROPOSAL_VOTE_UNSPECIFIED",
+      "description": "ProposalVote is the enum type for the proposal vote.\n\n - PROPOSAL_VOTE_UNSPECIFIED: unchosen value\n - PROPOSAL_VOTE_NO: no\n - PROPOSAL_VOTE_YES: yes"
+    },
+    "furysports.fury.dvm.PubkeysChangeProposalPayload": {
+      "type": "object",
+      "properties": {
+        "additions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "additions contain new pub keys to be added to public keys."
+        },
+        "deletions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "deletions contain old pub keys to be removed from public keys."
+        }
+      },
+      "description": "PubkeysChangeProposalPayload indicates data of public keys changes proposal\nticket."
+    },
+    "furysports.fury.dvm.PublicKeysChangeFinishedProposal": {
+      "type": "object",
+      "properties": {
+        "proposal": {
+          "$ref": "#/definitions/furysports.fury.dvm.PublicKeysChangeProposal",
+          "description": "proposal is the proposal for additions and removals of pub keys."
+        },
+        "result": {
+          "$ref": "#/definitions/furysports.fury.dvm.ProposalResult",
+          "description": "result is the result of the finished proposal."
+        },
+        "result_meta": {
+          "type": "string",
+          "description": "result_meta is the metadata related to the result of the finished proposal."
+        },
+        "finish_ts": {
+          "type": "string",
+          "format": "int64",
+          "description": "finish_ts is the block time that the proposal is set as finished."
+        }
+      },
+      "description": "PublicKeysChangeFinishedProposal is the type used for the finished proposal\nfor additions and removals of pub keys."
+    },
+    "furysports.fury.dvm.PublicKeysChangeProposal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64",
+          "description": "id is the sequential id of the proposal generated by the blockchain."
+        },
+        "creator": {
+          "type": "string",
+          "description": "creator is the account address of the proposal creator."
+        },
+        "modifications": {
+          "$ref": "#/definitions/furysports.fury.dvm.PubkeysChangeProposalPayload",
+          "description": "modifications contain the ticket payload of the proposal."
+        },
+        "votes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.dvm.Vote"
+          },
+          "description": "votes contains the votes of the proposal."
+        },
+        "start_ts": {
+          "type": "string",
+          "format": "int64",
+          "description": "start_ts is the block time that the proposal is set."
+        }
+      },
+      "description": "PublicKeysChangeProposal is the type for the proposal for additions and\nremovals of pub keys."
+    },
+    "furysports.fury.dvm.QueryActivePublicKeysChangeProposalResponse": {
+      "type": "object",
+      "properties": {
+        "proposal": {
+          "$ref": "#/definitions/furysports.fury.dvm.PublicKeysChangeProposal",
+          "description": "proposal holds the active proposal."
+        }
+      },
+      "description": "QueryActivePublicKeysChangeProposalResponse is the response type for the\nQuery/ActivePublicKeysChangeProposal RPC method."
+    },
+    "furysports.fury.dvm.QueryActivePublicKeysChangeProposalsResponse": {
+      "type": "object",
+      "properties": {
+        "proposals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.dvm.PublicKeysChangeProposal"
+          },
+          "description": "proposals hold the active proposals."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse"
+        }
+      },
+      "description": "QueryActivePublicKeysChangeProposalsResponse is the response type for the\nQuery/ActivePublicKeysChangeProposals RPC method."
+    },
+    "furysports.fury.dvm.QueryFinishedPublicKeysChangeProposalResponse": {
+      "type": "object",
+      "properties": {
+        "proposal": {
+          "$ref": "#/definitions/furysports.fury.dvm.PublicKeysChangeFinishedProposal",
+          "description": "proposal holds the finished proposal."
+        }
+      },
+      "description": "FinishedPublicKeysChangeProposal is the response type for the\nQuery/FinishedPublicKeysChangeProposal RPC method."
+    },
+    "furysports.fury.dvm.QueryFinishedPublicKeysChangeProposalsResponse": {
+      "type": "object",
+      "properties": {
+        "proposals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/furysports.fury.dvm.PublicKeysChangeFinishedProposal"
+          },
+          "description": "proposals hold the finished proposals."
+        },
+        "pagination": {
+          "$ref": "#/definitions/cosmos.base.query.v1beta1.PageResponse"
+        }
+      },
+      "description": "QueryFinishedPublicKeysChangeProposalsResponse is the response type for the\nQuery/FinishedPublicKeysChangeProposals RPC method."
+    },
+    "furysports.fury.dvm.QueryParamsResponse": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "$ref": "#/definitions/furysports.fury.dvm.Params",
+          "description": "params holds all the parameters of this module."
+        }
+      },
+      "description": "QueryParamsResponse is the response type for the Query/Params RPC method.\nQuery/Params RPC method."
+    },
+    "furysports.fury.dvm.QueryPubKeysResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "list is the list of allowed public keys."
+        }
+      },
+      "description": "QueryPubKeysResponse is the response type for the public keys list query.\nQuery/PubKeys RPC method."
+    },
+    "furysports.fury.dvm.Vote": {
+      "type": "object",
+      "properties": {
+        "public_key": {
+          "type": "string",
+          "description": "public_key is the public key of the voter."
+        },
+        "vote": {
+          "$ref": "#/definitions/furysports.fury.dvm.ProposalVote",
+          "description": "vote is the vote enum value."
+        }
+      },
+      "description": "Vote is the type for the proposal vote."
+    },
+    "google.protobuf.Any": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "grpc.gateway.runtime.Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/google.protobuf.Any"
+          }
+        }
+      }
+    }
+  }
+}
